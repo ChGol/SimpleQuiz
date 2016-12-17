@@ -7,9 +7,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 public class StartGameActivity extends AppCompatActivity {
     private EditText mEditText;
     private Button mNextButton;
+
+    private QuestionDatabase questionDatabase = new RandomQuestionDatabase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +40,16 @@ public class StartGameActivity extends AppCompatActivity {
         // 2. Otworzyć nowe okno przekazując wpisany tekst
         Intent nameIntent = new Intent(this, GreetingActivity.class);
         nameIntent.putExtra("name", name);
+        // Losowanie pytań
+        List<Question> questions = questionDatabase.getQuestions();
+        Random random = new Random();
+        while (questions.size() > 5) {
+            //Usuwa losowy elemnet z listy
+            questions.remove(random.nextInt(questions.size()));
+
+        }
+        Collections.shuffle(questions);
+        nameIntent.putExtra("questions", new ArrayList<>(questions));
         startActivity(nameIntent);
     }
 }

@@ -12,7 +12,7 @@ public class RandomQuestionDatabase implements QuestionDatabase {
         Random random = new Random();
         for (int i = 0; i < 30; i++) {
             Question question = new Question();
-            int left = random.nextInt(100), right = random.nextInt();
+            int left = random.nextInt(100), right = random.nextInt(50);
             question.setQuestion(String.format("%d + %d = ?", left, right));
             int correctAnswer = left + right;
 
