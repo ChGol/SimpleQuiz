@@ -76,7 +76,8 @@ public class GreetingActivity extends AppCompatActivity {
 
     private void onBackClick() {
         mChoices[mCurrentQuestion] = mAnswers.getCheckedRadioButtonId();
-        if (mCurrentQuestion - 1 < 0) {
+        boolean isLastQuestion = mCurrentQuestion - 1 < 0;
+        if (isLastQuestion) {
             countResult();
             ;
             return;
@@ -87,10 +88,6 @@ public class GreetingActivity extends AppCompatActivity {
     }
 
     private void onNextClick() {
-        if (mCurrentQuestion + 1 == mQuestions.size()) {
-            //TODO
-            return;
-        }
         mChoices[mCurrentQuestion] = mAnswers.getCheckedRadioButtonId();
         mCurrentQuestion++;
         refreshView();
@@ -116,6 +113,8 @@ public class GreetingActivity extends AppCompatActivity {
 
     }
 
+
+
     private void countResult() {
         int correctAnswers = 0;
         int questionsCount = mQuestions.size();
@@ -140,3 +139,6 @@ public class GreetingActivity extends AppCompatActivity {
                 .show(getSupportFragmentManager(), "Tag1");
     }
 }
+
+//Test
+//Test
