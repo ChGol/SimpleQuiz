@@ -1,7 +1,5 @@
 package com.training.christian.simplequiz;
 
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,12 +7,13 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 public class GreetingActivity extends AppCompatActivity {
 
+    public static final String CURRENT_QUESTION = "currentQuestion";
+    public static final String CHOICES = "choices";
     private TextView mQuestion;
     private RadioGroup mAnswers;
     private RadioButton mAnswer1;
@@ -34,8 +33,8 @@ public class GreetingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_greeting);
 
         //1. Odczytanie przekazanego parametru
-        mPlayerName = getIntent().getStringExtra("name");
-        mQuestions = (List<Question>) getIntent().getSerializableExtra("questions");
+        mPlayerName = getIntent().getStringExtra(StartGameActivity.EXTRA_NAME);
+        mQuestions = (List<Question>) getIntent().getSerializableExtra(StartGameActivity.EXTRA_QUESTIONS);
         mChoices = new int[mQuestions.size()];
 
         //2. Wyświetlenie go na kontrolce TextView
@@ -62,15 +61,15 @@ public class GreetingActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mChoices[mCurrentQuestion] = mAnswers.getCheckedRadioButtonId();
-        outState.putInt("currentQuestion", mCurrentQuestion);
-        outState.putIntArray("choices", mChoices);
+        outState.putInt(CURRENT_QUESTION, mCurrentQuestion);
+        outState.putIntArray(CHOICES, mChoices);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mCurrentQuestion = savedInstanceState.getInt("currentQuestion", 0);
-        mChoices = savedInstanceState.getIntArray("choices");
+        mCurrentQuestion = savedInstanceState.getInt(CURRENT_QUESTION, 0);
+        mChoices = savedInstanceState.getIntArray(CHOICES);
 
         refreshView();
     }
@@ -135,18 +134,9 @@ public class GreetingActivity extends AppCompatActivity {
             }
         }
         //Toast.makeText(this, String.format("Wynik: %d/%d", correctAnswers, questionsCount), Toast.LENGTH_LONG).show();
+        //Szybkie powdaomienie typu toast
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setCancelable(false)
-                .setTitle("Wynik Quizu")
-                .setMessage(String.format("Witaj %s ! Twój wynik to %d/%d !", mPlayerName, correctAnswers, questionsCount))
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
-                .create();
-        dialog.show();
+        QuizResultDialogFragment.createDialog(mPlayerName, correctAnswers, questionsCount)
+                .show(getSupportFragmentManager(), "Tag1");
     }
 }

@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Random;
 
 public class StartGameActivity extends AppCompatActivity {
+
+    public static final String EXTRA_NAME = "name";
+    public static final String EXTRA_QUESTIONS = "questions";
+
     private EditText mEditText;
     private Button mNextButton;
 
