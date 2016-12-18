@@ -1,5 +1,7 @@
 package com.training.christian.simplequiz;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +26,7 @@ public class GreetingActivity extends AppCompatActivity {
     private Button mNextButton;
     private int[] mChoices;
     private RadioButton[] radioButtons;
+    private String mPlayerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,7 @@ public class GreetingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_greeting);
 
         //1. Odczytanie przekazanego parametru
-        String name = getIntent().getStringExtra("name");
+        mPlayerName = getIntent().getStringExtra("name");
         mQuestions = (List<Question>) getIntent().getSerializableExtra("questions");
         mChoices = new int[mQuestions.size()];
 
@@ -75,7 +78,8 @@ public class GreetingActivity extends AppCompatActivity {
     private void onBackClick() {
         mChoices[mCurrentQuestion] = mAnswers.getCheckedRadioButtonId();
         if (mCurrentQuestion - 1 < 0) {
-            countResult();;
+            countResult();
+            ;
             return;
         }
         //zapisanie opdowiedzi na wybranej odpowiedzi
@@ -129,7 +133,20 @@ public class GreetingActivity extends AppCompatActivity {
             if (correctAnswerIndex == choiceIndex) {
                 correctAnswers++;
             }
-            Toast.makeText(this, String.format("Wynik: %d/%d", correctAnswers, questionsCount), Toast.LENGTH_LONG).show();
         }
+        //Toast.makeText(this, String.format("Wynik: %d/%d", correctAnswers, questionsCount), Toast.LENGTH_LONG).show();
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setTitle("Wynik Quizu")
+                .setMessage(String.format("Witaj %s ! Twój wynik to %d/%d !", mPlayerName, correctAnswers, questionsCount))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create();
+        dialog.show();
     }
 }
